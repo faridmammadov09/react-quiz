@@ -7,16 +7,13 @@
 body {
   font-family: sans-serif;
   background-color: #dbdefd;
+  overflow-x: hidden;
 }
 
 ul {
   list-style-type: none;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+main {
   padding: 20px;
 }

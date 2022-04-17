@@ -25,15 +25,16 @@
 .question {
   text-align: center;
   padding: 60px 20px;
-  font-size: 20px;
   border: 2px solid #e0e1f3;
   margin-bottom: 20px;
   border-radius: 10px;
   background-color: #fff;
+  line-height: 1.4;
 }
 
 @media (min-width: 768px) {
   .question {
     padding: 60px;
+    font-size: 20px;
   }
 }

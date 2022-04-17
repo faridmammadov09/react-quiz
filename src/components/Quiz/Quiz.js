@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import "./Quiz.css";
+
 import ActiveQuiz from "./ActiveQuiz";
 import FinalResult from "../FinalResult/FinalResult";
 

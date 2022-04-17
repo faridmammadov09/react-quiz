@@ -1,0 +1,18 @@
+.header {
+  background-color: #717bee;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+}
+
+.header-button {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  cursor: pointer;
+}
+
+.header-button svg {
+  fill: #fff;
+}
