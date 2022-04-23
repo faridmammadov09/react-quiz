@@ -1,74 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import Countdown, { zeroPad } from "react-countdown";
 
 import "./Quiz.css";
 
 import ActiveQuiz from "./ActiveQuiz";
 import FinalResult from "../FinalResult/FinalResult";
 
-const Quiz = () => {
-  const [quizData, setQuizData] = useState([
-    {
-      id: 1,
-      question: "What is the capital of Azerbaijan?",
-      answers: [
-        { id: 1, text: "Baku" },
-        { id: 2, text: "Ganja" },
-        { id: 3, text: "Aghdam" },
-        { id: 4, text: "Khankendi" },
-      ],
-      correctAnswerId: 1,
-    },
-    {
-      id: 2,
-      question: "Which color doesn't include in Azerbaijan's flag?",
-      answers: [
-        { id: 1, text: "Red" },
-        { id: 2, text: "Green" },
-        { id: 3, text: "Blue" },
-        { id: 4, text: "Yellow" },
-      ],
-      correctAnswerId: 4,
-    },
-    {
-      id: 3,
-      question: "Which country doesn't have border with Azerbaijan?",
-      answers: [
-        { id: 1, text: "Turkey" },
-        { id: 2, text: "Russia" },
-        { id: 3, text: "Ukraine" },
-        { id: 4, text: "Georgia" },
-      ],
-      correctAnswerId: 3,
-    },
-    {
-      id: 4,
-      question: "What is the currency of Azerbaijan?",
-      answers: [
-        { id: 1, text: "Lira" },
-        { id: 2, text: "Manat" },
-        { id: 3, text: "Ruble" },
-        { id: 4, text: "Euro" },
-      ],
-      correctAnswerId: 2,
-    },
-    {
-      id: 5,
-      question:
-        "What mountain range covers north and western parts of Azerbaijan?",
-      answers: [
-        { id: 1, text: "Altai" },
-        { id: 2, text: "Alps" },
-        { id: 3, text: "Himalayas" },
-        { id: 4, text: "Caucasus" },
-      ],
-      correctAnswerId: 4,
-    },
-  ]);
+import { ReactComponent as StopwatchIcon } from "../../assets/stopwatch-solid.svg";
+
+const Quiz = (props) => {
   const [activeQuizIndex, setActiveQuizIndex] = useState(0);
   const [selected, setSelected] = useState({});
   const [isFinished, setIsFinished] = useState(false);
   const [result, setResult] = useState(0);
   const [btnDisabled, setBtnDisabled] = useState(false);
+
+  const [timer, setTimer] = useState(Date.now() + props.timerValue * 1000);
+  const [timerIndex, setTimerIndex] = useState(0);
+
+  const countdownTimer = useRef();
+
+  const renderer = ({ minutes, seconds }) => {
+    return (
+      <span>
+        {zeroPad(minutes)}:{zeroPad(seconds)}
+      </span>
+    );
+  };
 
   const selectAnswerHandler = (selectedAnswerId) => {
     if (btnDisabled) {
@@ -76,7 +34,7 @@ const Quiz = () => {
     }
 
     const isCorrect =
-      quizData[activeQuizIndex].correctAnswerId === selectedAnswerId;
+      props.quizData[activeQuizIndex].correctAnswerId === selectedAnswerId;
 
     if (isCorrect) {
       setResult(result + 1);
@@ -89,17 +47,26 @@ const Quiz = () => {
 
     setBtnDisabled(true);
 
-    if (activeQuizIndex < quizData.length - 1) {
+    if (activeQuizIndex < props.quizData.length - 1) {
       setTimeout(() => {
-        setActiveQuizIndex(activeQuizIndex + 1);
+        setActiveQuizIndex((prevState) => {
+          return prevState + 1;
+        });
         setSelected({});
         setBtnDisabled(false);
+
+        setTimer(Date.now() + props.timerValue * 1000);
+        setTimerIndex((prevState) => {
+          return prevState + 1;
+        });
       }, 1000);
     } else {
       setTimeout(() => {
         setIsFinished(true);
       }, 1000);
     }
+
+    pauseTimer();
   };
 
   const tryAgainHandler = () => {
@@ -108,21 +75,54 @@ const Quiz = () => {
     setIsFinished(false);
     setResult(0);
     setBtnDisabled(false);
+    setTimer(Date.now() + props.timerValue * 1000);
+    setTimerIndex((prevState) => {
+      return prevState + 1;
+    });
   };
+
+  const countdownCompleteHandler = () => {
+    if (activeQuizIndex < props.quizData.length - 1) {
+      setActiveQuizIndex((prevState) => {
+        return prevState + 1;
+      });
+
+      setTimer(Date.now() + props.timerValue * 1000);
+      setTimerIndex((prevState) => {
+        return prevState + 1;
+      });
+    } else {
+      setIsFinished(true);
+    }
+  };
+
+  const pauseTimer = () => countdownTimer.current.pause();
 
   return (
     <React.Fragment>
+      {!isFinished && (
+        <p className="quiz-timer">
+          <StopwatchIcon />
+          <Countdown
+            date={timer}
+            key={timerIndex}
+            renderer={renderer}
+            onComplete={countdownCompleteHandler}
+            ref={countdownTimer}
+          />
+        </p>
+      )}
       {isFinished ? (
         <FinalResult
           result={result}
-          quizLength={quizData.length}
+          quizLength={props.quizData.length}
           onTryAgain={tryAgainHandler}
         />
       ) : (
         <ActiveQuiz
-          quiz={quizData[activeQuizIndex]}
+          quiz={props.quizData[activeQuizIndex]}
           activeQuizIndex={activeQuizIndex + 1}
-          quizLength={quizData.length}
+          quizLength={props.quizData.length}
           onSelectAnswer={selectAnswerHandler}
           selected={selected}
           btnDisabled={btnDisabled}

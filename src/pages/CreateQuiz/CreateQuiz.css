@@ -1,0 +1,22 @@
+.form-create {
+  max-width: 500px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 25px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.form-create__footer {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .form-create__footer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}

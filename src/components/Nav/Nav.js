@@ -14,7 +14,7 @@ const Nav = (props) => {
   return (
     <div className={`nav ${props.openNav ? "show" : ""}`}>
       <div className="nav-header">
-        <div className="close-button" onClick={props.closeNav}>
+        <div className="close-button" onClick={props.onToggleNav}>
           <CloseIcon />
         </div>
       </div>

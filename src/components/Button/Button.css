@@ -14,3 +14,7 @@
   border-color: #717aef;
   color: #717aef;
 }
+
+.button--sm {
+  padding: 10px;
+}

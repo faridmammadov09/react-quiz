@@ -20,6 +20,7 @@
   justify-content: center;
   align-items: center;
   font-weight: 700;
+  transition: all 0.4s ease;
 }
 
 .question {
@@ -30,6 +31,7 @@
   border-radius: 10px;
   background-color: #fff;
   line-height: 1.4;
+  transition: all 0.4s ease;
 }
 
 @media (min-width: 768px) {
